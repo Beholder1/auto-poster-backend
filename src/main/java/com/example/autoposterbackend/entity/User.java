@@ -1,17 +1,20 @@
 package com.example.autoposterbackend.entity;
 
+import com.example.autoposterbackend.dto.UserRegisterDto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.*;
+
+import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.List;
 
 @Entity
 @Data
-@Table(name = "customer")
+@Table(name = "users")
 @NoArgsConstructor
 public class User implements UserDetails {
     @Id
@@ -24,6 +27,17 @@ public class User implements UserDetails {
     private Role role;
 
     private Long roleId;
+
+    @Column(name = "username")
+    private String realUsername;
+
+    private Boolean registered;
+
+    private Boolean banned;
+
+    private Timestamp lastLogin;
+
+    private Timestamp lastLogout;
 
     @Override
     public String getUsername() {
@@ -58,5 +72,13 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(this.role);
+    }
+
+    public User(UserRegisterDto userDto) {
+        this.email = userDto.getEmail().trim().toLowerCase();
+        this.realUsername = this.email.split("@")[0];
+        this.registered = false;
+        this.banned = false;
+        this.roleId = 2L;
     }
 }
