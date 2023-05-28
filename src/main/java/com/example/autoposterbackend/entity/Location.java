@@ -1,9 +1,11 @@
 package com.example.autoposterbackend.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "locations")
 public class Location {

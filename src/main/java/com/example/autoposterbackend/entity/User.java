@@ -1,19 +1,20 @@
 package com.example.autoposterbackend.entity;
 
 import com.example.autoposterbackend.dto.UserRegisterDto;
-import lombok.Data;
+import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import jakarta.persistence.*;
 
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Table(name = "users")
 @NoArgsConstructor
 public class User implements UserDetails {
@@ -26,6 +27,7 @@ public class User implements UserDetails {
     @JoinColumn(name = "role_id", insertable = false, updatable = false)
     private Role role;
 
+    @Column(name = "role_id")
     private Long roleId;
 
     @Column(name = "username")
