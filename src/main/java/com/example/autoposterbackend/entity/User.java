@@ -24,10 +24,10 @@ public class User implements UserDetails {
     private String email;
     private String password;
     @ManyToOne
-    @JoinColumn(name = "role_id", insertable = false, updatable = false)
+    @JoinColumn(name = "role_id")
     private Role role;
 
-    @Column(name = "role_id")
+    @Column(name = "role_id", insertable = false, updatable = false)
     private Long roleId;
 
     @Column(name = "username")
