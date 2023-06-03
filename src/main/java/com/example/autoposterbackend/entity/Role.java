@@ -15,7 +15,7 @@ import org.springframework.security.core.GrantedAuthority;
 @Table(name = "roles")
 public class Role implements GrantedAuthority {
     @Id
-    private Long id;
+    private Integer id;
     private String name;
 
     @Override

@@ -7,8 +7,8 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface PasswordResetRepository extends JpaRepository<PasswordReset, Long> {
+public interface PasswordResetRepository extends JpaRepository<PasswordReset, Integer> {
     PasswordReset findByToken(String token);
 
-    Optional<PasswordReset> findByUser_Id(Long userId);
+    Optional<PasswordReset> findByUser_Id(Integer userId);
 }
