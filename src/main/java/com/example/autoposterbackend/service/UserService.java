@@ -47,7 +47,7 @@ public class UserService {
         return token;
     }
 
-    public void logout(Long id) {
+    public void logout(Integer id) {
         User user = userRepository.findById(id).get();
         user.setLastLogout(new Timestamp(System.currentTimeMillis()));
         userRepository.save(user);

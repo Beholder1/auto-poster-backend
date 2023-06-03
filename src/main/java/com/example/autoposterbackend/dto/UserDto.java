@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 public class UserDto {
-    private Long id;
+    private Integer id;
     private String email;
 
     public UserDto(User user) {

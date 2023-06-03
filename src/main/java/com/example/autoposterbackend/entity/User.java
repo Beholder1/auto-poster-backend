@@ -20,7 +20,7 @@ import java.util.List;
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
     private String email;
     private String password;
     @ManyToOne
@@ -28,7 +28,7 @@ public class User implements UserDetails {
     private Role role;
 
     @Column(name = "role_id", insertable = false, updatable = false)
-    private Long roleId;
+    private Integer roleId;
 
     @Column(name = "username")
     private String realUsername;
@@ -81,6 +81,6 @@ public class User implements UserDetails {
         this.realUsername = this.email.split("@")[0];
         this.registered = false;
         this.banned = false;
-        this.roleId = 2L;
+        this.roleId = 3;
     }
 }
