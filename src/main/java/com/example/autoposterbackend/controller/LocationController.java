@@ -1,6 +1,5 @@
 package com.example.autoposterbackend.controller;
 
-import com.example.autoposterbackend.dto.request.CreateAccountRequest;
 import com.example.autoposterbackend.dto.request.CreateLocationRequest;
 import com.example.autoposterbackend.dto.response.LocationsResponse;
 import com.example.autoposterbackend.service.LocationService;
@@ -26,7 +25,7 @@ public class LocationController {
 
     @PostMapping("/{userId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createAccount(@PathVariable Integer userId, CreateLocationRequest request) {
+    public void createLocation(@PathVariable Integer userId, @RequestBody CreateLocationRequest request) {
         locationService.createLocation(userId, request);
     }
 }

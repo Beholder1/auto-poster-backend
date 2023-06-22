@@ -1,8 +1,8 @@
 package com.example.autoposterbackend.dto.request;
 
-import lombok.Getter;
+import lombok.Data;
 
-@Getter
+@Data
 public class CreateLocationRequest {
     private String name;
 }
