@@ -4,7 +4,6 @@ import com.example.autoposterbackend.dto.request.CreateAccountRequest;
 import com.example.autoposterbackend.dto.response.AccountsDetailsResponse;
 import com.example.autoposterbackend.dto.response.AccountsResponse;
 import com.example.autoposterbackend.service.AccountService;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -32,7 +31,7 @@ public class AccountController {
 
     @PostMapping("/{userId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createAccount(@PathVariable Integer userId, CreateAccountRequest request) {
+    public void createAccount(@PathVariable Integer userId, @RequestBody CreateAccountRequest request) throws Exception {
         accountService.createAccount(userId, request);
     }
 }

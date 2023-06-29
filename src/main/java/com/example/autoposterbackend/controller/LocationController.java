@@ -1,6 +1,7 @@
 package com.example.autoposterbackend.controller;
 
 import com.example.autoposterbackend.dto.request.CreateLocationRequest;
+import com.example.autoposterbackend.dto.request.EditLocationRequest;
 import com.example.autoposterbackend.dto.response.LocationsResponse;
 import com.example.autoposterbackend.service.LocationService;
 import lombok.RequiredArgsConstructor;
@@ -27,5 +28,10 @@ public class LocationController {
     @ResponseStatus(HttpStatus.CREATED)
     public void createLocation(@PathVariable Integer userId, @RequestBody CreateLocationRequest request) {
         locationService.createLocation(userId, request);
+    }
+
+    @PutMapping("/{userId}")
+    public void editLocation(@PathVariable Integer userId, @RequestBody EditLocationRequest request) {
+        locationService.editLocation(userId, request);
     }
 }

@@ -1,9 +1,9 @@
 package com.example.autoposterbackend.service;
 
+import com.example.autoposterbackend.config.AppConfig;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -13,8 +13,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class EmailService {
     private final JavaMailSender emailSender;
-    @Value("${spring.mail.username}")
-    private String appEmail;
+    private final AppConfig appConfig;
 
     @Async
     public void sendConfirmationEmail(String to, String email) {
@@ -24,7 +23,7 @@ public class EmailService {
             mimeMessageHelper.setText(email, true);
             mimeMessageHelper.setTo(to);
             mimeMessageHelper.setSubject("Confirm your email");
-            mimeMessageHelper.setFrom(appEmail);
+            mimeMessageHelper.setFrom(appConfig.getAppEmail());
             emailSender.send(mimeMessage);
         } catch (MessagingException e) {
             throw new IllegalStateException("Failed to send email");
