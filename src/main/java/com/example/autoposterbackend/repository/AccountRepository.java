@@ -12,14 +12,15 @@ import java.util.Optional;
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Integer> {
     void deleteByIdAndUserId(Integer id, Integer userId);
-    List<Account> findByUserId(Integer userId);
+
+    List<Account> findAllByUserId(Integer userId);
 
     Optional<Account> findByUserIdAndName(Integer userId, String name);
 
     @Query("select a from Account a where " +
             "a.userId=:userId " +
             "AND lower(a.name) like lower(concat('%', :name, '%'))")
-    List<Account> findByUserIdAndNameLike(Integer userId, String name, Pageable pageable);
+    List<Account> findAllByUserIdAndNameLike(Integer userId, String name, Pageable pageable);
 
     @Query("select count(a) from Account a where " +
             "a.userId=:userId " +

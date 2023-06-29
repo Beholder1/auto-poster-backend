@@ -1,7 +1,7 @@
 package com.example.autoposterbackend.controller;
 
-import com.example.autoposterbackend.dto.request.CreateLocationRequest;
 import com.example.autoposterbackend.dto.request.CreateProductRequest;
+import com.example.autoposterbackend.dto.response.ProductsBriefResponse;
 import com.example.autoposterbackend.dto.response.ProductsResponse;
 import com.example.autoposterbackend.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +17,11 @@ public class ProductController {
     @GetMapping("/{userId}")
     public ProductsResponse getProducts(@PathVariable Integer userId, @RequestParam(required = false) String name) {
         return productService.getProducts(userId, name);
+    }
+
+    @GetMapping("/{userId}/brief")
+    public ProductsBriefResponse getUserAccounts(@PathVariable Integer userId) {
+        return productService.getProductsBrief(userId);
     }
 
     @DeleteMapping("/{userId}/{productId}")

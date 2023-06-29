@@ -1,6 +1,5 @@
 package com.example.autoposterbackend.repository;
 
-import com.example.autoposterbackend.entity.Account;
 import com.example.autoposterbackend.entity.Product;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,10 +18,12 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     @Query("select p from Product p where " +
             "p.userId=:userId " +
             "AND lower(p.name) like lower(concat('%', :name, '%'))")
-    List<Product> findByUserIdAndNameLike(Integer userId, String name, Pageable pageable);
+    List<Product> findAllByUserIdAndNameLike(Integer userId, String name, Pageable pageable);
 
     @Query("select count(p) from Product p where " +
             "p.userId=:userId " +
             "AND lower(p.name) like lower(concat('%', :name, '%'))")
     Integer countAllByUserIdAndNameLike(Integer userId, String name);
+
+    List<Product> findAllByUserId(Integer userId);
 }

@@ -2,8 +2,10 @@ package com.example.autoposterbackend.dto;
 
 import com.example.autoposterbackend.entity.Account;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 public class AccountDetailsDto {
     private Integer id;
     private String name;

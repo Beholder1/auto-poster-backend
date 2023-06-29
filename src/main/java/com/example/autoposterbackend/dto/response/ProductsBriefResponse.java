@@ -1,6 +1,6 @@
 package com.example.autoposterbackend.dto.response;
 
-import com.example.autoposterbackend.dto.LocationDto;
+import com.example.autoposterbackend.dto.ProductBriefDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -8,7 +8,6 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class LocationsResponse {
-    private List<LocationDto> locations;
-    private Integer pages;
+public class ProductsBriefResponse {
+    private List<ProductBriefDto> products;
 }
