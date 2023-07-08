@@ -31,7 +31,7 @@ public class ProductController {
 
     @PostMapping("/{userId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createAccount(@PathVariable Integer userId, CreateProductRequest request) {
+    public void createAccount(@PathVariable Integer userId, @RequestBody CreateProductRequest request) {
         productService.createProduct(userId, request);
     }
 }
