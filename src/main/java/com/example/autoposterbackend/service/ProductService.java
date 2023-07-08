@@ -5,6 +5,8 @@ import com.example.autoposterbackend.dto.ProductDto;
 import com.example.autoposterbackend.dto.request.CreateProductRequest;
 import com.example.autoposterbackend.dto.response.ProductsBriefResponse;
 import com.example.autoposterbackend.dto.response.ProductsResponse;
+import com.example.autoposterbackend.entity.Image;
+import com.example.autoposterbackend.repository.ImageRepository;
 import com.example.autoposterbackend.entity.Product;
 import com.example.autoposterbackend.repository.ProductRepository;
 import com.example.autoposterbackend.repository.UserRepository;
@@ -13,7 +15,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -21,6 +25,7 @@ import java.util.List;
 public class ProductService {
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
+    private final ImageRepository imageRepository;
 
     public ProductsResponse getProducts(Integer userId, String name) {
         name = name != null ? name : "";
@@ -34,6 +39,7 @@ public class ProductService {
         productRepository.deleteById(productId);
     }
 
+    @Transactional
     public void createProduct(Integer userId, CreateProductRequest request) {
         Product product = new Product();
         if (productRepository.findByUserIdAndName(userId, request.getName()).isPresent()) {
@@ -44,7 +50,16 @@ public class ProductService {
         product.setTitle(request.getTitle());
         product.setDescription(request.getDescription());
         product.setPrice(request.getPrice());
-        productRepository.save(product);
+        product = productRepository.save(product);
+        productRepository.flush();
+        List<Image> images = new ArrayList<>();
+        for (String imageUrl : request.getImages()) {
+            Image image = new Image();
+            image.setProduct(product);
+            image.setUrl(imageUrl);
+            images.add(image);
+        }
+        imageRepository.saveAll(images);
     }
 
     public ProductsBriefResponse getProductsBrief(Integer userId) {
