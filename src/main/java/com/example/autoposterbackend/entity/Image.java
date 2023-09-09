@@ -15,7 +15,7 @@ public class Image {
     private Integer id;
 
     @Column(name = "url")
-    private String url;
+    private byte[] url;
 
     @Column(name = "product_id", insertable = false, updatable = false)
     private Integer productId;

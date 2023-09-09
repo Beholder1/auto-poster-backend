@@ -6,8 +6,8 @@ import com.example.autoposterbackend.dto.request.CreateProductRequest;
 import com.example.autoposterbackend.dto.response.ProductsBriefResponse;
 import com.example.autoposterbackend.dto.response.ProductsResponse;
 import com.example.autoposterbackend.entity.Image;
-import com.example.autoposterbackend.repository.ImageRepository;
 import com.example.autoposterbackend.entity.Product;
+import com.example.autoposterbackend.repository.ImageRepository;
 import com.example.autoposterbackend.repository.ProductRepository;
 import com.example.autoposterbackend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,9 +16,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -40,7 +43,7 @@ public class ProductService {
     }
 
     @Transactional
-    public void createProduct(Integer userId, CreateProductRequest request) {
+    public void createProduct(Integer userId, CreateProductRequest request) throws IOException {
         Product product = new Product();
         if (productRepository.findByUserIdAndName(userId, request.getName()).isPresent()) {
             throw new RuntimeException();
@@ -53,10 +56,10 @@ public class ProductService {
         product = productRepository.save(product);
         productRepository.flush();
         List<Image> images = new ArrayList<>();
-        for (String imageUrl : request.getImages()) {
+        for (MultipartFile uploadedImage : request.getImages()) {
             Image image = new Image();
             image.setProduct(product);
-            image.setUrl(imageUrl);
+            image.setUrl(Objects.requireNonNull(uploadedImage.getBytes()));
             images.add(image);
         }
         imageRepository.saveAll(images);
