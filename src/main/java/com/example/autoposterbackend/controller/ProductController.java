@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/products")
@@ -29,9 +31,9 @@ public class ProductController {
         productService.deleteProduct(userId, productId);
     }
 
-    @PostMapping("/{userId}")
+    @PostMapping(path = "/{userId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createAccount(@PathVariable Integer userId, @RequestBody CreateProductRequest request) {
+    public void createProduct(@PathVariable Integer userId, @ModelAttribute CreateProductRequest request) throws IOException {
         productService.createProduct(userId, request);
     }
 }
