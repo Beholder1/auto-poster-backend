@@ -22,7 +22,7 @@ public class ProductController {
     }
 
     @GetMapping("/{userId}/brief")
-    public ProductsBriefResponse getUserAccounts(@PathVariable Integer userId) {
+    public ProductsBriefResponse getProductsBrief(@PathVariable Integer userId) {
         return productService.getProductsBrief(userId);
     }
 
