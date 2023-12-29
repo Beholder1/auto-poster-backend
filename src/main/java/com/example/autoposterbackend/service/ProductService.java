@@ -1,8 +1,10 @@
 package com.example.autoposterbackend.service;
 
+import com.example.autoposterbackend.dto.ImageDto;
 import com.example.autoposterbackend.dto.ProductBriefDto;
 import com.example.autoposterbackend.dto.ProductDto;
 import com.example.autoposterbackend.dto.request.CreateProductRequest;
+import com.example.autoposterbackend.dto.response.ProductImagesResponse;
 import com.example.autoposterbackend.dto.response.ProductsBriefResponse;
 import com.example.autoposterbackend.dto.response.ProductsResponse;
 import com.example.autoposterbackend.entity.Category;
@@ -78,5 +80,9 @@ public class ProductService {
 
     public ProductsBriefResponse getProductsBrief(Integer userId) {
         return new ProductsBriefResponse(productRepository.findAllByUserId(userId).stream().map(ProductBriefDto::new).toList());
+    }
+
+    public ProductImagesResponse getProductImages(Integer productId) {
+        return new ProductImagesResponse(imageRepository.findAllByProductId(productId).stream().map(ImageDto::new).toList());
     }
 }

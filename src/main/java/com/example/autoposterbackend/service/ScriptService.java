@@ -134,7 +134,7 @@ public class ScriptService {
                 //Ukryj przed znajomymi
                 if (scriptRequest.getHideBeforeFriends()) {
                     List<WebElement> hideBeforeFriends = driver.findElements(By.xpath("(//div[@role='switch'])[2]"));
-                    hideBeforeFriends.get(hideBeforeFriends.size() - 1).click();
+                    hideBeforeFriends.getLast().click();
                 }
 
                 try {

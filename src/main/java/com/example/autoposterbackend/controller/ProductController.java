@@ -1,6 +1,7 @@
 package com.example.autoposterbackend.controller;
 
 import com.example.autoposterbackend.dto.request.CreateProductRequest;
+import com.example.autoposterbackend.dto.response.ProductImagesResponse;
 import com.example.autoposterbackend.dto.response.ProductsBriefResponse;
 import com.example.autoposterbackend.dto.response.ProductsResponse;
 import com.example.autoposterbackend.service.ProductService;
@@ -31,9 +32,14 @@ public class ProductController {
         productService.deleteProduct(userId, productId);
     }
 
-    @PostMapping(path = "/{userId}")
+    @PostMapping("/{userId}")
     @ResponseStatus(HttpStatus.CREATED)
     public void createProduct(@PathVariable Integer userId, @ModelAttribute CreateProductRequest request) throws IOException {
         productService.createProduct(userId, request);
+    }
+
+    @GetMapping("/{productId}/images")
+    public ProductImagesResponse getProductImages(@PathVariable Integer productId) {
+        return productService.getProductImages(productId);
     }
 }
