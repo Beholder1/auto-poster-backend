@@ -6,8 +6,9 @@ import org.springframework.stereotype.Component;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
@@ -16,53 +17,47 @@ import java.security.SecureRandom;
 public class AccountEncoder {
     private final AppConfig appConfig;
     private final static String HEX = "0123456789ABCDEF";
+    private static final String AES_MODE = "AES/CBC/PKCS5Padding";
+    private static final String SECURE_RANDOM_ALGORITHM = "SHA1PRNG";
 
-    public String decrypt(String encrypted) throws Exception {
-        byte[] rawKey = getRawKey(appConfig.getPasswordSeed().getBytes());
-        byte[] enc = toByte(encrypted);
-        byte[] result = decrypt(rawKey, enc);
-        return new String(result);
+    private static final byte[] IV = new byte[16];
+    static {
+        SecureRandom random = new SecureRandom();
+        random.nextBytes(IV);
     }
 
-    private byte[] decrypt(byte[] raw, byte[] encrypted)
-            throws Exception {
-        SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
-        Cipher cipher = Cipher.getInstance("AES");
-        cipher.init(Cipher.DECRYPT_MODE, skeySpec);
-        return cipher.doFinal(encrypted);
+    public String decrypt(String encrypted) throws Exception {
+        byte[] rawKey = getRawKey(appConfig.getPasswordSeed().getBytes(StandardCharsets.UTF_8));
+        byte[] iv = toByte(encrypted.substring(0, 32));
+        byte[] encryptedBytes = toByte(encrypted.substring(32));
+        Cipher cipher = Cipher.getInstance(AES_MODE);
+        cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(rawKey, "AES"), new IvParameterSpec(iv));
+        byte[] result = cipher.doFinal(encryptedBytes);
+        return new String(result, StandardCharsets.UTF_8);
     }
 
     private byte[] getRawKey(byte[] seed) throws NoSuchAlgorithmException {
-        KeyGenerator kgen = KeyGenerator.getInstance("AES");
-        SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
+        KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
+        SecureRandom sr = SecureRandom.getInstance(SECURE_RANDOM_ALGORITHM);
         sr.setSeed(seed);
-        kgen.init(128, sr);
-        SecretKey skey = kgen.generateKey();
-        return skey.getEncoded();
+        keyGenerator.init(128, sr);
+        return keyGenerator.generateKey().getEncoded();
     }
 
     public byte[] toByte(String hexString) {
         int len = hexString.length() / 2;
         byte[] result = new byte[len];
         for (int i = 0; i < len; i++)
-            result[i] = Integer.valueOf(
-                    hexString.substring(2 * i, 2 * i + 2), 16).byteValue();
+            result[i] = Integer.valueOf(hexString.substring(2 * i, 2 * i + 2), 16).byteValue();
         return result;
     }
 
-    public String encrypt(String cleartext)
-            throws Exception {
-        byte[] rawKey = getRawKey(appConfig.getPasswordSeed().getBytes());
-        byte[] result = encrypt(rawKey, cleartext.getBytes());
-        return toHex(result);
-    }
-
-    private byte[] encrypt(byte[] raw, byte[] clear)
-            throws Exception {
-        SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
-        Cipher cipher = Cipher.getInstance("AES");
-        cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
-        return cipher.doFinal(clear);
+    public String encrypt(String cleartext) throws Exception {
+        byte[] rawKey = getRawKey(appConfig.getPasswordSeed().getBytes(StandardCharsets.UTF_8));
+        Cipher cipher = Cipher.getInstance(AES_MODE);
+        cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(rawKey, "AES"), new IvParameterSpec(IV));
+        byte[] result = cipher.doFinal(cleartext.getBytes(StandardCharsets.UTF_8));
+        return toHex(IV) + toHex(result);
     }
 
     public String toHex(String txt) {

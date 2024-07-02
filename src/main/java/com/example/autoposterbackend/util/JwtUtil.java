@@ -3,13 +3,14 @@ package com.example.autoposterbackend.util;
 import com.example.autoposterbackend.config.AppConfig;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,7 +38,7 @@ public class JwtUtil implements Serializable {
     }
 
     private Claims getAllClaimsFromToken(String token) {
-        return Jwts.parser().setSigningKey(appConfig.getJwtSecret()).build().parseSignedClaims(token).getPayload();
+        return Jwts.parser().verifyWith(Keys.hmacShaKeyFor(appConfig.getJwtSecret().getBytes(StandardCharsets.UTF_8))).build().parseSignedClaims(token).getPayload();
     }
 
     private Boolean isTokenExpired(String token) {
@@ -57,7 +58,7 @@ public class JwtUtil implements Serializable {
         long prolong = rememberMe ? (long) (2.4 * 30) : 1;
         return Jwts.builder().claims(claims).subject(subject).issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000 * prolong))
-                .signWith(SignatureAlgorithm.HS512, appConfig.getJwtSecret()).compact();
+                .signWith(Keys.hmacShaKeyFor(appConfig.getJwtSecret().getBytes(StandardCharsets.UTF_8))).compact();
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {

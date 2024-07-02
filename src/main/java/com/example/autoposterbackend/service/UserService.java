@@ -8,8 +8,8 @@ import com.example.autoposterbackend.entity.PasswordReset;
 import com.example.autoposterbackend.entity.User;
 import com.example.autoposterbackend.repository.PasswordResetRepository;
 import com.example.autoposterbackend.repository.UserRepository;
-import com.example.autoposterbackend.util.CustomPasswordEncoder;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,7 +25,7 @@ public class UserService {
     private final PasswordResetRepository passwordResetRepository;
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailService emailService;
-    private final CustomPasswordEncoder customPasswordEncoder;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public String sendForgotPasswordEmail(ForgotPasswordRequest email) {
         Optional<User> userOptional = userRepository.findByEmail(email.getEmail());
@@ -58,7 +58,7 @@ public class UserService {
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new IllegalStateException("Email already taken");
         }
-        String encodedPassword = customPasswordEncoder.getPasswordEncoder().encode(userDto.getPassword());
+        String encodedPassword = bCryptPasswordEncoder.encode(userDto.getPassword());
         user.setPassword(encodedPassword);
         userRepository.save(user);
 
@@ -100,7 +100,7 @@ public class UserService {
             throw new IllegalStateException();
         }
         User user = userRepository.findById(passwordReset.getUser().getId()).get();
-        user.setPassword(customPasswordEncoder.getPasswordEncoder().encode(passwordResetDto.getPassword()));
+        user.setPassword(bCryptPasswordEncoder.encode(passwordResetDto.getPassword()));
         userRepository.save(user);
         passwordReset.setConfirmedAt(LocalDateTime.now());
         passwordResetRepository.save(passwordReset);
