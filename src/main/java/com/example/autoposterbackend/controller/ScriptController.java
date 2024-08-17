@@ -1,5 +1,6 @@
 package com.example.autoposterbackend.controller;
 
+import com.example.autoposterbackend.dto.request.RefreshScriptRequest;
 import com.example.autoposterbackend.dto.request.ScriptRequest;
 import com.example.autoposterbackend.service.ScriptService;
 import lombok.RequiredArgsConstructor;
@@ -14,5 +15,10 @@ public class ScriptController {
     @PostMapping("/{userId}")
     private void runScript(@PathVariable Integer userId, @RequestBody ScriptRequest scriptRequest) throws InterruptedException {
         scriptService.runScript(userId, scriptRequest);
+    }
+
+    @PostMapping("/refresh/{userId}")
+    private void runRefreshScript(@PathVariable Integer userId, @RequestBody RefreshScriptRequest refreshScriptRequest) {
+        scriptService.runRefreshScript(userId, refreshScriptRequest);
     }
 }
