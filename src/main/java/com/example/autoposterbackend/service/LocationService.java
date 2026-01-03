@@ -30,7 +30,7 @@ public class LocationService {
     }
 
     public void deleteLocation(Integer userId, Integer locationId) {
-        locationRepository.deleteById(locationId);
+        locationRepository.deleteByIdAndUserId(locationId, userId);
     }
 
     public void createLocation(Integer userId, CreateLocationRequest request) {

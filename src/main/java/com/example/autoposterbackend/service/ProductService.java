@@ -45,7 +45,7 @@ public class ProductService {
     }
 
     public void deleteProduct(Integer userId, Integer productId) {
-        Product product = productRepository.findById(productId).orElseThrow(RuntimeException::new);
+        Product product = productRepository.findByIdAndUserId(productId, userId).orElseThrow(RuntimeException::new);
         imageRepository.deleteByProductId(productId);
         product.getCategories().clear();
         productRepository.deleteById(productId);

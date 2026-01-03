@@ -45,7 +45,7 @@ public class AccountService {
     }
 
     public void deleteAccount(Integer userId, Integer accountId) {
-        accountRepository.deleteById(accountId);
+        accountRepository.deleteByIdAndUserId(accountId, userId);
     }
 
     public void createAccount(Integer userId, CreateAccountRequest request) throws Exception {
