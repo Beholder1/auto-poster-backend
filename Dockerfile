@@ -1,4 +1,4 @@
-FROM maven:3.9.6-eclipse-temurin-21 as builder
+FROM maven:3.9.11-eclipse-temurin-25 as builder
 
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
@@ -11,7 +11,7 @@ COPY src /usr/src/app/src
 
 RUN mvn -T 1C package
 
-FROM openjdk:21-jdk
+FROM openjdk:25-jdk
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 COPY --from=builder /usr/src/app/target/dependency ./lib

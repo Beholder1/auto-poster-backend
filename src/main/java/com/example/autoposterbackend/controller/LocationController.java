@@ -3,9 +3,11 @@ package com.example.autoposterbackend.controller;
 import com.example.autoposterbackend.dto.request.CreateLocationRequest;
 import com.example.autoposterbackend.dto.request.EditLocationRequest;
 import com.example.autoposterbackend.dto.response.LocationsResponse;
+import com.example.autoposterbackend.entity.User;
 import com.example.autoposterbackend.service.LocationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -14,24 +16,24 @@ import org.springframework.web.bind.annotation.*;
 public class LocationController {
     private final LocationService locationService;
 
-    @GetMapping("/{userId}")
-    public LocationsResponse getLocations(@PathVariable Integer userId, String name) {
-        return locationService.getLocations(userId, name);
+    @GetMapping
+    public LocationsResponse getLocations(@AuthenticationPrincipal User user, String name) {
+        return locationService.getLocations(user.getId(), name);
     }
 
-    @DeleteMapping("/{userId}/{locationId}")
-    public void deleteLocation(@PathVariable Integer userId, @PathVariable Integer locationId) {
-        locationService.deleteLocation(userId, locationId);
+    @DeleteMapping("/{locationId}")
+    public void deleteLocation(@AuthenticationPrincipal User user, @PathVariable Integer locationId) {
+        locationService.deleteLocation(user.getId(), locationId);
     }
 
-    @PostMapping("/{userId}")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createLocation(@PathVariable Integer userId, @RequestBody CreateLocationRequest request) {
-        locationService.createLocation(userId, request);
+    public void createLocation(@AuthenticationPrincipal User user, @RequestBody CreateLocationRequest request) {
+        locationService.createLocation(user.getId(), request);
     }
 
-    @PutMapping("/{userId}")
-    public void editLocation(@PathVariable Integer userId, @RequestBody EditLocationRequest request) {
-        locationService.editLocation(userId, request);
+    @PutMapping
+    public void editLocation(@AuthenticationPrincipal User user, @RequestBody EditLocationRequest request) {
+        locationService.editLocation(user.getId(), request);
     }
 }

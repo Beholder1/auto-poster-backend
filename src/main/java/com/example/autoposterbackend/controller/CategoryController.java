@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class CategoryController {
     private final CategoryService categoryService;
 
-    @GetMapping()
+    @GetMapping
     public CategoriesResponse getCategories() {
         return categoryService.getCategories();
     }
