@@ -36,7 +36,8 @@ public class SecurityConfig {
         return http.csrf(AbstractHttpConfigurer::disable).cors(AbstractHttpConfigurer::disable)
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(eh -> eh.authenticationEntryPoint((request, response, e) -> response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage())))
-                .authorizeHttpRequests(ahr -> ahr.requestMatchers("/api/auth/**").permitAll().anyRequest().authenticated())
+                // /error: bez tego kazdy nieobsluzony wyjatek wraca jako 401 zamiast 500
+                .authorizeHttpRequests(ahr -> ahr.requestMatchers("/api/auth/**", "/error").permitAll().anyRequest().authenticated())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 //.httpBasic(Customizer.withDefaults())
                 //.formLogin(Customizer.withDefaults())

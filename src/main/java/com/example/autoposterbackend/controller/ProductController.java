@@ -1,6 +1,7 @@
 package com.example.autoposterbackend.controller;
 
 import com.example.autoposterbackend.dto.request.CreateProductRequest;
+import com.example.autoposterbackend.dto.request.EditProductRequest;
 import com.example.autoposterbackend.dto.response.ProductImagesResponse;
 import com.example.autoposterbackend.dto.response.ProductsBriefResponse;
 import com.example.autoposterbackend.dto.response.ProductsResponse;
@@ -38,6 +39,11 @@ public class ProductController {
     @ResponseStatus(HttpStatus.CREATED)
     public void createProduct(@AuthenticationPrincipal User user, @ModelAttribute CreateProductRequest request) throws IOException {
         productService.createProduct(user.getId(), request);
+    }
+
+    @PutMapping
+    public void editProduct(@AuthenticationPrincipal User user, @RequestBody EditProductRequest request) {
+        productService.editProduct(user.getId(), request);
     }
 
     @GetMapping("/{productId}/images")

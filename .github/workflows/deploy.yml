@@ -1,0 +1,34 @@
+name: Deploy na serwer
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dołącz runnera do tailnetu
+        uses: tailscale/github-action@v3
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          tags: tag:ci
+
+      - name: Przygotuj klucz SSH
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+
+      - name: Uruchom deploy na serwerze
+        run: >
+          ssh -o StrictHostKeyChecking=accept-new
+          ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}
+          'auto-poster-backend'
+        # Nazwa projektu trafia do deploy-dispatch.sh (forced command w authorized_keys).

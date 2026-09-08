@@ -7,6 +7,7 @@ import com.example.autoposterbackend.dto.response.LocationsResponse;
 import com.example.autoposterbackend.entity.Location;
 import com.example.autoposterbackend.repository.LocationRepository;
 import com.example.autoposterbackend.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class LocationService {
     private final LocationRepository locationRepository;

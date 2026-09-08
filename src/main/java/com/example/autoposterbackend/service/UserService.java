@@ -7,6 +7,7 @@ import com.example.autoposterbackend.entity.ConfirmationToken;
 import com.example.autoposterbackend.entity.PasswordReset;
 import com.example.autoposterbackend.entity.User;
 import com.example.autoposterbackend.repository.PasswordResetRepository;
+import com.example.autoposterbackend.repository.RoleRepository;
 import com.example.autoposterbackend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -22,6 +23,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final PasswordResetRepository passwordResetRepository;
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailService emailService;
@@ -58,6 +60,8 @@ public class UserService {
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new IllegalStateException("Email already taken");
         }
+        // pole roleId jest insertable=false — zapisywana jest relacja role
+        user.setRole(roleRepository.findById(3).orElseThrow(() -> new IllegalStateException("Missing default role")));
         String encodedPassword = bCryptPasswordEncoder.encode(userDto.getPassword());
         user.setPassword(encodedPassword);
         userRepository.save(user);

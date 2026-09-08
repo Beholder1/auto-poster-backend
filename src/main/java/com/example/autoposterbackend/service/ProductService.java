@@ -4,6 +4,7 @@ import com.example.autoposterbackend.dto.ImageDto;
 import com.example.autoposterbackend.dto.ProductBriefDto;
 import com.example.autoposterbackend.dto.ProductDto;
 import com.example.autoposterbackend.dto.request.CreateProductRequest;
+import com.example.autoposterbackend.dto.request.EditProductRequest;
 import com.example.autoposterbackend.dto.response.ProductImagesResponse;
 import com.example.autoposterbackend.dto.response.ProductsBriefResponse;
 import com.example.autoposterbackend.dto.response.ProductsResponse;
@@ -76,6 +77,22 @@ public class ProductService {
             images.add(image);
         }
         imageRepository.saveAll(images);
+    }
+
+    public void editProduct(Integer userId, EditProductRequest request) {
+        Product product = productRepository.findByIdAndUserId(request.getId(), userId).orElseThrow(RuntimeException::new);
+        if (!product.getName().equals(request.getName())
+                && productRepository.findByUserIdAndName(userId, request.getName()).isPresent()) {
+            throw new RuntimeException();
+        }
+        product.setName(request.getName());
+        product.setTitle(request.getTitle());
+        product.setDescription(request.getDescription());
+        product.setPrice(request.getPrice());
+        if (request.getCategoryIds() != null) {
+            product.setCategories(categoryRepository.findAllById(request.getCategoryIds()));
+        }
+        productRepository.save(product);
     }
 
     public ProductsBriefResponse getProductsBrief(Integer userId) {

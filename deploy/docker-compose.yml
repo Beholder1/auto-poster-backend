@@ -1,0 +1,30 @@
+# Stack auto-poster-backend: samo API (bez nginxa — tunel celuje prosto w kontener).
+# Na świat wystawia wspólny cloudflared (sieć "edge", stack firmowe-liczydlo):
+#   public hostname autoposter-api.inkarium.pl -> http://auto-poster-api:8080
+# Baza: wspólny Postgres na hoście (db auto_poster, schemat public).
+#
+# Wymagany plik .env obok compose (patrz sekcja environment).
+
+services:
+  api:
+    build: ./auto-poster-backend
+    container_name: auto-poster-api
+    environment:
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=${SPRING_JPA_HIBERNATE_DDL_AUTO}
+      - JWT_SECRET=${JWT_SECRET}
+      - PASSWORD_SEED=${PASSWORD_SEED}
+      - SPRING_MAIL_HOST=${SPRING_MAIL_HOST}
+      - SPRING_MAIL_PORT=${SPRING_MAIL_PORT}
+      - SPRING_MAIL_USERNAME=${SPRING_MAIL_USERNAME}
+      - SPRING_MAIL_PASSWORD=${SPRING_MAIL_PASSWORD}
+      - SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH=true
+      - SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE=true
+    restart: unless-stopped
+    networks: [edge]
+
+networks:
+  edge:
+    external: true

@@ -1,0 +1,2 @@
+# Skrypty bash muszą mieć uniksowe końce linii, nawet commitowane z Windowsa
+*.sh text eol=lf

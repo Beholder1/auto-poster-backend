@@ -1,6 +1,7 @@
 package com.example.autoposterbackend.controller;
 
 import com.example.autoposterbackend.dto.request.CreateAccountRequest;
+import com.example.autoposterbackend.dto.request.EditAccountRequest;
 import com.example.autoposterbackend.dto.response.AccountsDetailsResponse;
 import com.example.autoposterbackend.dto.response.AccountsResponse;
 import com.example.autoposterbackend.entity.User;
@@ -35,5 +36,10 @@ public class AccountController {
     @ResponseStatus(HttpStatus.CREATED)
     public void createAccount(@AuthenticationPrincipal User user, @RequestBody CreateAccountRequest request) throws Exception {
         accountService.createAccount(user.getId(), request);
+    }
+
+    @PutMapping
+    public void editAccount(@AuthenticationPrincipal User user, @RequestBody EditAccountRequest request) throws Exception {
+        accountService.editAccount(user.getId(), request);
     }
 }

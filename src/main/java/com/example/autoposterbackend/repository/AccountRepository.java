@@ -19,6 +19,8 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
 
     Optional<Account> findByUserIdAndName(Integer userId, String name);
 
+    Optional<Account> findByIdAndUserId(Integer id, Integer userId);
+
     @Query("select a from Account a where " +
             "a.userId=:userId " +
             "AND lower(a.name) like lower(concat('%', :name, '%'))")

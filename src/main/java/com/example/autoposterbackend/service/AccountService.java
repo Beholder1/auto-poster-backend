@@ -3,12 +3,14 @@ package com.example.autoposterbackend.service;
 import com.example.autoposterbackend.dto.AccountDetailsDto;
 import com.example.autoposterbackend.dto.AccountDto;
 import com.example.autoposterbackend.dto.request.CreateAccountRequest;
+import com.example.autoposterbackend.dto.request.EditAccountRequest;
 import com.example.autoposterbackend.dto.response.AccountsDetailsResponse;
 import com.example.autoposterbackend.dto.response.AccountsResponse;
 import com.example.autoposterbackend.entity.Account;
 import com.example.autoposterbackend.repository.AccountRepository;
 import com.example.autoposterbackend.repository.UserRepository;
 import com.example.autoposterbackend.util.AccountEncoder;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class AccountService {
     private final AccountRepository accountRepository;
@@ -42,6 +45,20 @@ public class AccountService {
                 throw new RuntimeException(ex);
             }
         }).toList(), pages);
+    }
+
+    public void editAccount(Integer userId, EditAccountRequest request) throws Exception {
+        Account account = accountRepository.findByIdAndUserId(request.getId(), userId).orElseThrow(RuntimeException::new);
+        if (!account.getName().equals(request.getName())
+                && accountRepository.findByUserIdAndName(userId, request.getName()).isPresent()) {
+            throw new RuntimeException();
+        }
+        account.setName(request.getName());
+        account.setEmail(request.getEmail());
+        if (request.getPassword() != null && !request.getPassword().isBlank()) {
+            account.setPassword(accountEncoder.encrypt(request.getPassword()));
+        }
+        accountRepository.save(account);
     }
 
     public void deleteAccount(Integer userId, Integer accountId) {
