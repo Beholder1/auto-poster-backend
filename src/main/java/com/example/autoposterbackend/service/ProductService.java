@@ -82,7 +82,8 @@ public class ProductService {
         return new ProductsBriefResponse(productRepository.findAllByUserId(userId).stream().map(ProductBriefDto::new).toList());
     }
 
-    public ProductImagesResponse getProductImages(Integer productId) {
+    public ProductImagesResponse getProductImages(Integer userId, Integer productId) {
+        productRepository.findByIdAndUserId(productId, userId).orElseThrow(RuntimeException::new);
         return new ProductImagesResponse(imageRepository.findAllByProductId(productId).stream().map(ImageDto::new).toList());
     }
 }

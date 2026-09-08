@@ -41,7 +41,7 @@ public class ProductController {
     }
 
     @GetMapping("/{productId}/images")
-    public ProductImagesResponse getProductImages(@PathVariable Integer productId) {
-        return productService.getProductImages(productId);
+    public ProductImagesResponse getProductImages(@AuthenticationPrincipal User user, @PathVariable Integer productId) {
+        return productService.getProductImages(user.getId(), productId);
     }
 }

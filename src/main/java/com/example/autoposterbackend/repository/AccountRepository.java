@@ -15,6 +15,8 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
 
     List<Account> findAllByUserId(Integer userId);
 
+    List<Account> findAllByUserIdAndIdIn(Integer userId, List<Integer> ids);
+
     Optional<Account> findByUserIdAndName(Integer userId, String name);
 
     @Query("select a from Account a where " +
