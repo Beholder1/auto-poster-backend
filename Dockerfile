@@ -1,4 +1,4 @@
-FROM maven:3.9.11-eclipse-temurin-25 as builder
+FROM maven:3-eclipse-temurin-25 AS build
 
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
@@ -11,11 +11,11 @@ COPY src /usr/src/app/src
 
 RUN mvn -T 1C package
 
-FROM openjdk:25-jdk
+FROM eclipse-temurin:25-jre-alpine
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
-COPY --from=builder /usr/src/app/target/dependency ./lib
-COPY --from=builder /usr/src/app/target/autoposter.jar .
+COPY --from=build /usr/src/app/target/dependency ./lib
+COPY --from=build /usr/src/app/target/autoposter-backend.jar .
 EXPOSE 8080
 
-ENTRYPOINT exec java $JAVA_OPTS -jar autoposter.jar
+ENTRYPOINT ["java", "-jar", "autoposter-backend.jar"]

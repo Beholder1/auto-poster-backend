@@ -121,7 +121,7 @@
 							<mainClass>com.example.autoposterbackend.AutoPosterBackendApplication</mainClass>
 						</manifest>
 					</archive>
-					<finalName>autoposter</finalName>
+					<finalName>autoposter-backend</finalName>
 				</configuration>
 			</plugin>
 			<plugin>
