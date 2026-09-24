@@ -8,6 +8,6 @@
 #   echo 'deploy ALL=(root) NOPASSWD: /usr/local/bin/auto-poster-rebuild.sh' > /etc/sudoers.d/auto-poster-rebuild
 #   chmod 440 /etc/sudoers.d/auto-poster-rebuild
 set -euo pipefail
-cd /srv/apps/auto-poster-backend
+cd /srv/apps/auto-poster
 docker compose build api
 docker compose up -d
