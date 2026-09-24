@@ -2,6 +2,7 @@ package com.example.autoposterbackend.util;
 
 import com.example.autoposterbackend.config.AppConfig;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +44,7 @@ public class JwtUtil implements Serializable {
 
     private Boolean isTokenExpired(String token) {
         final Date expiration = getExpirationDateFromToken(token);
-        return expiration.before(new Date());
+        return expiration != null && expiration.before(new Date());
     }
 
     public String generateToken(UserDetails userDetails, Integer userId, String username, Boolean rememberMe) {
@@ -55,10 +56,12 @@ public class JwtUtil implements Serializable {
     }
 
     private String doGenerateToken(Map<String, Object> claims, String subject, Boolean rememberMe) {
-        long prolong = rememberMe ? (long) (2.4 * 30) : 1;
-        return Jwts.builder().claims(claims).subject(subject).issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000 * prolong))
-                .signWith(Keys.hmacShaKeyFor(appConfig.getJwtSecret().getBytes(StandardCharsets.UTF_8))).compact();
+        JwtBuilder builder = Jwts.builder().claims(claims).subject(subject)
+                .issuedAt(new Date(System.currentTimeMillis()));
+        if (!Boolean.TRUE.equals(rememberMe)) {
+            builder.expiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000));
+        }
+        return builder.signWith(Keys.hmacShaKeyFor(appConfig.getJwtSecret().getBytes(StandardCharsets.UTF_8))).compact();
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {
