@@ -11,8 +11,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -44,6 +46,13 @@ public class ProductController {
     @PutMapping
     public void editProduct(@AuthenticationPrincipal User user, @RequestBody EditProductRequest request) {
         productService.editProduct(user.getId(), request);
+    }
+
+    @PostMapping("/{productId}/images")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addProductImages(@AuthenticationPrincipal User user, @PathVariable Integer productId,
+                                 @RequestParam("images") List<MultipartFile> images) throws IOException {
+        productService.addProductImages(user.getId(), productId, images);
     }
 
     @GetMapping("/{productId}/images")

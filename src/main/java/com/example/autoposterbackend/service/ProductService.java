@@ -79,6 +79,18 @@ public class ProductService {
         imageRepository.saveAll(images);
     }
 
+    public void addProductImages(Integer userId, Integer productId, List<MultipartFile> uploadedImages) throws IOException {
+        Product product = productRepository.findByIdAndUserId(productId, userId).orElseThrow(RuntimeException::new);
+        List<Image> images = new ArrayList<>();
+        for (MultipartFile uploadedImage : uploadedImages) {
+            Image image = new Image();
+            image.setProduct(product);
+            image.setUrl(Objects.requireNonNull(uploadedImage.getBytes()));
+            images.add(image);
+        }
+        imageRepository.saveAll(images);
+    }
+
     public void editProduct(Integer userId, EditProductRequest request) {
         Product product = productRepository.findByIdAndUserId(request.getId(), userId).orElseThrow(RuntimeException::new);
         if (!product.getName().equals(request.getName())
